@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yahya's Quiz Game</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    body {
+      background-color: #1a1a24;
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .game-container {
+      background: #282836;
+      border: 4px solid #4e4e68;
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    .character-avatar {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      margin-bottom: 20px;
+      border: 3px solid #ffcc00;
+      border-radius: 50%;
+      background: #3a3a4d;
+      padding: 5px;
+    }
+
+    .dialogue-box {
+      background: #191923;
+      border: 2px solid #555577;
+      border-radius: 8px;
+      padding: 15px;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #76eec6;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #555577;
+      border-radius: 6px;
+      background: #191923;
+      color: #ffffff;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: #ffcc00;
+    }
+
+    button {
+      padding: 12px 20px;
+      background: #ffcc00;
+      color: #1a1a24;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #e6b800;
+    }
+
+    .feedback {
+      height: 24px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .correct { color: #55ff55; }
+    .wrong { color: #ff5555; }
+  </style>
+</head>
+<body>
+
+  <div class="game-container">
+    <!-- Make sure your pixel art image is named avatar.png and placed in the same folder -->
+    <img src="avatar.png" alt="Game Character" class="character-avatar">
+    
+    <div class="dialogue-box" id="questionBox">
+      Loading question...
+    </div>
+
+    <form id="quizForm" onsubmit="checkAnswer(event)">
+      <div class="input-group">
+        <input type="text" id="answerInput" placeholder="Type your answer..." autocomplete="off" required>
+        <button type="submit" id="submitBtn">Submit</button>
+      </div>
+    </form>
+
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <script>
+    const questions = [
+      { question: "What is my name?", answer: "yahya" },
+      { question: "What is my age?", answer: "16" },
+      { question: "What is my favorite game?", answer: "free fire" },
+      { question: "What is my favorite word?", answer: "zin" }
+    ];
+
+    let currentQuestionIndex = 0;
+
+    const questionBox = document.getElementById("questionBox");
+    const answerInput = document.getElementById("answerInput");
+    const feedback = document.getElementById("feedback");
+    const quizForm = document.getElementById("quizForm");
+
+    function displayQuestion() {
+      questionBox.textContent = questions[currentQuestionIndex].question;
+      answerInput.value = "";
+      feedback.textContent = "";
+    }
+
+    function checkAnswer(event) {
+      event.preventDefault();
+      
+      const userAnswer = answerInput.value.trim().toLowerCase();
+      const correctAnswer = questions[currentQuestionIndex].answer.toLowerCase();
+
+      if (userAnswer === correctAnswer) {
+        feedback.className = "feedback correct";
+        feedback.textContent = "Correct! 🎉";
+        
+        currentQuestionIndex++;
+
+        setTimeout(() => {
+          if (currentQuestionIndex < questions.length) {
+            displayQuestion();
+          } else {
+            showCompletionScreen();
+          }
+        }, 1000);
+      } else {
+        feedback.className = "feedback wrong";
+        feedback.textContent = "Wrong! Try again. ❌";
+      }
+    }
+
+    function showCompletionScreen() {
+      questionBox.textContent = "You answered all my questions correctly! You know me well! 🏆";
+      quizForm.style.display = "none";
+      feedback.textContent = "";
+    }
+
+    // Start the game
+    displayQuestion();
+  </script>
+
+</body>
+</html>
